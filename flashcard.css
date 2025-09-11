@@ -102,3 +102,12 @@
                 opacity: 1;
             }
         }
+ .card-nav-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 0 8px;
+        }
