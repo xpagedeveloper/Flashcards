@@ -26,6 +26,9 @@
             font-size: 1.2em;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         .card-front {
