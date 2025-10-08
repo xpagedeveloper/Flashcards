@@ -9,6 +9,8 @@ A lightweight, dependency-free JavaScript library for building animated flip-sty
 - Directional slide animations (left/right/up/down) with optional overlay arrows
 - Configurable dimensions, colours, and fonts globally or per card
 - Keyboard navigation (arrow keys) and click-to-flip interaction
+- Configurable dimensions, colours, and fonts globally or per card
+- Keyboard navigation (left/right arrow keys) and click-to-flip interaction
 - Works in modern browsers without any build tooling
 
 ## Getting started
@@ -72,6 +74,14 @@ Creates a new flashcard application instance. All properties are optional.
 | `textColor`       | string | `"#333333"`                                | Text colour for both faces.                                                                |
 | `navigationMode`  | string | `"buttons"`                                | Choose between `"buttons"`, `"side-arrows"`, or `"vertical-arrows"` for navigation controls. |
 | `slideDirection`  | string | `"left"`                                   | Direction for forward navigation: `"left"`, `"right"`, `"up"`, or `"down"`. Previous uses the opposite direction. |
+| Option        | Type   | Default                                 | Description                                   |
+|---------------|--------|-----------------------------------------|-----------------------------------------------|
+| `width`       | string | `"300px"`                              | Width of the flashcard.                       |
+| `height`      | string | `"200px"`                              | Height of the flashcard.                      |
+| `font`        | string | `"'Inter', 'Segoe UI', Arial, sans-serif"` | Font family applied to both card faces.       |
+| `frontColor`  | string | `"#ffffff"`                            | Background colour of the card front.          |
+| `backColor`   | string | `"#ffebcd"`                            | Background colour of the card back.           |
+| `textColor`   | string | `"#333333"`                            | Text colour for both faces.                   |
 
 #### `.addPage(frontText, backText, pageConfig?)`
 
