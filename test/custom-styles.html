@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard Library – Custom Styles</title>
+    <link rel="stylesheet" href="../flashcard.css" />
+    <style>
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        padding: 32px;
+        background-color: #0f172a;
+        color: #e2e8f0;
+        display: grid;
+        place-items: center;
+        gap: 24px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+      }
+
+      .hint {
+        margin: 0;
+        text-align: center;
+        color: #94a3b8;
+        max-width: 48ch;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Custom Themed Cards</h1>
+    <p class="hint">Navigation swaps between buttons and overlay arrows as you explore the wildlife deck.</p>
+    <div id="flashcardCustom"></div>
+
+    <script src="../flashcard.js"></script>
+    <script>
+      const animals = [
+        {
+          latin: 'Vulpes vulpes',
+          name: 'Red Fox',
+          navigationMode: 'buttons',
+          style: { frontColor: '#f97316', backColor: '#7c2d12', textColor: '#fff7ed' }
+        },
+        {
+          latin: 'Delphinus delphis',
+          name: 'Common Dolphin',
+          navigationMode: 'side-arrows',
+          style: { frontColor: '#0ea5e9', backColor: '#0f172a', textColor: '#e0f2fe' }
+        },
+        {
+          latin: 'Strigops habroptilus',
+          name: 'Kākāpō',
+          navigationMode: 'buttons',
+          style: { frontColor: '#bef264', backColor: '#3f6212', textColor: '#0f172a' }
+        }
+      ];
+
+      const app = new FlashcardLib.FlashcardApp({
+        width: '380px',
+        height: '240px',
+        frontColor: '#1e293b',
+        backColor: '#0f172a',
+        textColor: '#e2e8f0',
+        font: "'Fira Sans', 'Inter', sans-serif",
+        navigationMode: 'buttons',
+        slideDirection: 'right'
+      });
+
+      animals.forEach(({ latin, name, navigationMode, style }) => {
+        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, { ...style, navigationMode });
+      });
+
+      app.start('flashcardCustom');
+    </script>
+  </body>
+</html>
