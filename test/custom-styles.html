@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard Library – Custom Styles</title>
+    <link rel="stylesheet" href="../flashcard.css" />
+    <style>
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        padding: 32px;
+        background-color: #0f172a;
+        color: #e2e8f0;
+        display: grid;
+        place-items: center;
+        gap: 24px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+      }
+
+      .hint {
+        margin: 0;
+        text-align: center;
+        color: #94a3b8;
+        max-width: 48ch;
+      }
+
+      .control-panel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .control-panel label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #cbd5f5;
+      }
+
+      .control-panel select {
+        background: #1e293b;
+        color: #f8fafc;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Custom Themed Cards</h1>
+    <p class="hint">
+      Adjust the controls in real time&mdash;the deck will respect your preference unless a card asks for a special layout.
+    </p>
+    <div class="control-panel">
+      <label for="navModePicker">
+        Navigation controls:
+        <select id="navModePicker">
+          <option value="buttons">Buttons</option>
+          <option value="side-arrows">Side arrows</option>
+          <option value="vertical-arrows">Vertical arrows</option>
+          <option value="none">Hidden</option>
+        </select>
+      </label>
+    </div>
+    <div id="flashcardCustom"></div>
+
+    <script src="../flashcard.js"></script>
+    <script>
+      const animals = [
+        {
+          latin: 'Vulpes vulpes',
+          name: 'Red Fox',
+          navigationMode: 'buttons',
+          style: { frontColor: '#f97316', backColor: '#7c2d12', textColor: '#fff7ed' }
+        },
+        {
+          latin: 'Delphinus delphis',
+          name: 'Common Dolphin',
+          navigationMode: 'side-arrows',
+          style: { frontColor: '#0ea5e9', backColor: '#0f172a', textColor: '#e0f2fe' }
+        },
+        {
+          latin: 'Ailuropoda melanoleuca',
+          name: 'Giant Panda',
+          style: { frontColor: '#f1f5f9', backColor: '#1e293b', textColor: '#0f172a' }
+        },
+        {
+          latin: 'Strigops habroptilus',
+          name: 'Kākāpō',
+          navigationMode: 'none',
+          style: { frontColor: '#bef264', backColor: '#3f6212', textColor: '#0f172a' }
+        }
+      ];
+
+      const app = new FlashcardLib.FlashcardApp({
+        width: '380px',
+        height: '240px',
+        frontColor: '#1e293b',
+        backColor: '#0f172a',
+        textColor: '#e2e8f0',
+        font: "'Fira Sans', 'Inter', sans-serif",
+        navigationMode: 'buttons',
+        slideDirection: 'right'
+      });
+
+      animals.forEach(({ latin, name, navigationMode, style }) => {
+        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, { ...style, navigationMode });
+      });
+
+      app.start('flashcardCustom');
+
+      const picker = document.getElementById('navModePicker');
+      picker.addEventListener('change', (event) => {
+        const selected = event.target.value;
+        app.setNavigationMode(selected);
+      });
+    </script>
+  </body>
+</html>

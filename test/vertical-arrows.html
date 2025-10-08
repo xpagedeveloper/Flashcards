@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard Library – Vertical Arrows</title>
+    <link rel="stylesheet" href="../flashcard.css" />
+    <style>
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at bottom, #f0fdf4, #dcfce7 40%, #bbf7d0);
+      }
+
+      h1 {
+        margin-bottom: 24px;
+        color: #166534;
+        text-align: center;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Street Food Snacks</h1>
+      <div id="flashcardVertical"></div>
+    </main>
+
+    <script src="../flashcard.js"></script>
+    <script>
+      const snacks = [
+        { emoji: '🌮', dish: 'Taco al pastor', city: 'Mexico City', country: 'Mexico' },
+        { emoji: '🥙', dish: 'Falafel pita', city: 'Jerusalem', country: 'Israel' },
+        { emoji: '🥟', dish: 'Jiaozi dumplings', city: 'Beijing', country: 'China' },
+        { emoji: '🥘', dish: 'Paella', city: 'Valencia', country: 'Spain' }
+      ];
+
+      const app = new FlashcardLib.FlashcardApp({
+        navigationMode: 'top-bottom',
+        slideDirection: 'down'
+      });
+
+      snacks.forEach(({ emoji, dish, city, country }) => {
+        app.addPage(`${emoji} ${dish}`, `Where to try it: ${city}, ${country}`);
+      });
+
+      app.start('flashcardVertical');
+    </script>
+  </body>
+</html>
