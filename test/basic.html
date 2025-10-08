@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard Library – Basic Example</title>
+    <link rel="stylesheet" href="../flashcard.css" />
+    <style>
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #e0f2fe, #fae8ff);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="flashcardApp"></div>
+
+    <script src="../flashcard.js"></script>
+    <script>
+      const capitals = [
+        { city: 'Stockholm', country: 'Sweden' },
+        { city: 'Tokyo', country: 'Japan' },
+        { city: 'Buenos Aires', country: 'Argentina' },
+        { city: 'Nairobi', country: 'Kenya' },
+        { city: 'Reykjavík', country: 'Iceland' }
+      ];
+
+      const app = new FlashcardLib.FlashcardApp();
+
+      capitals.forEach(({ city, country }) => {
+        app.addPage(city, `Country: ${country}`);
+      });
+
+      app.start('flashcardApp');
+    </script>
+  </body>
+</html>
