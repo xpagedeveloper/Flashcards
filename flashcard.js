@@ -18,16 +18,76 @@
     textColor: '#333333'
   };
 
+  const VALID_DIRECTIONS = new Set(['left', 'right', 'up', 'down']);
+
   const ANIMATION_CLASSES = [
     'slide-left-out',
     'slide-left-in',
     'slide-right-out',
-    'slide-right-in'
+    'slide-right-in',
+    'slide-up-out',
+    'slide-up-in',
+    'slide-down-out',
+    'slide-down-in'
   ];
+
+  const DIRECTION_CLASS_MAP = {
+    left: {
+      out: 'slide-left-out',
+      in: 'slide-left-in'
+    },
+    right: {
+      out: 'slide-right-out',
+      in: 'slide-right-in'
+    },
+    up: {
+      out: 'slide-up-out',
+      in: 'slide-up-in'
+    },
+    down: {
+      out: 'slide-down-out',
+      in: 'slide-down-in'
+    }
+  };
+
+  const OPPOSITE_DIRECTION = {
+    left: 'right',
+    right: 'left',
+    up: 'down',
+    down: 'up'
+  };
+
+  const VALID_NAVIGATION_MODES = new Set(['buttons', 'side-arrows', 'vertical-arrows']);
+
+  const normalizeDirection = (direction, fallback = 'left') => {
+    if (typeof direction !== 'string') {
+      return fallback;
+    }
+
+    const trimmed = direction.trim().toLowerCase();
+    return VALID_DIRECTIONS.has(trimmed) ? trimmed : fallback;
+  };
+
+  const normalizeNavigationMode = (mode, fallback = 'buttons') => {
+    if (typeof mode !== 'string') {
+      return fallback;
+    }
+
+    const trimmed = mode.trim().toLowerCase();
+    return VALID_NAVIGATION_MODES.has(trimmed) ? trimmed : fallback;
+  };
 
   class FlashcardApp {
     constructor(options = {}) {
-      this.style = { ...DEFAULT_STYLE, ...options };
+      const {
+        navigationMode = 'buttons',
+        slideDirection = 'left',
+        ...styleOverrides
+      } = options;
+
+      this.style = { ...DEFAULT_STYLE, ...styleOverrides };
+      this.navigationMode = normalizeNavigationMode(navigationMode);
+      this.slideDirection = normalizeDirection(slideDirection);
       this.pages = [];
       this.currentIndex = 0;
       this._keydownHandler = null;
@@ -89,7 +149,7 @@
       container.innerHTML = '';
 
       const cardContainer = document.createElement('div');
-      cardContainer.className = 'flashcard-container';
+      cardContainer.className = `flashcard-container navigation-${this.navigationMode}`;
 
       const card = document.createElement('div');
       card.className = 'flashcard';
@@ -105,20 +165,55 @@
       cardContainer.appendChild(card);
       container.appendChild(cardContainer);
 
-      const nav = document.createElement('div');
-      nav.className = 'nav-buttons';
+      let prevControl = null;
+      let nextControl = null;
+      let nav = null;
 
-      const prevBtn = document.createElement('button');
-      prevBtn.type = 'button';
-      prevBtn.textContent = 'Previous';
+      if (this.navigationMode === 'buttons') {
+        nav = document.createElement('div');
+        nav.className = 'nav-buttons';
 
-      const nextBtn = document.createElement('button');
-      nextBtn.type = 'button';
-      nextBtn.textContent = 'Next';
+        const prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.textContent = 'Previous';
 
-      nav.appendChild(prevBtn);
-      nav.appendChild(nextBtn);
-      container.appendChild(nav);
+        const nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.textContent = 'Next';
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(nextBtn);
+        container.appendChild(nav);
+
+        prevControl = prevBtn;
+        nextControl = nextBtn;
+      } else {
+        const createArrowButton = (className, label) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = `flashcard-arrow ${className}`;
+          button.innerHTML = label;
+          return button;
+        };
+
+        if (this.navigationMode === 'side-arrows') {
+          prevControl = createArrowButton('arrow-horizontal arrow-left', '&#10094;');
+          prevControl.setAttribute('aria-label', 'Previous card');
+          nextControl = createArrowButton('arrow-horizontal arrow-right', '&#10095;');
+          nextControl.setAttribute('aria-label', 'Next card');
+        } else if (this.navigationMode === 'vertical-arrows') {
+          prevControl = createArrowButton('arrow-vertical arrow-top', '&#9650;');
+          prevControl.setAttribute('aria-label', 'Previous card');
+          nextControl = createArrowButton('arrow-vertical arrow-bottom', '&#9660;');
+          nextControl.setAttribute('aria-label', 'Next card');
+        }
+
+        [prevControl, nextControl].forEach(control => {
+          if (control) {
+            cardContainer.appendChild(control);
+          }
+        });
+      }
 
       const resetAnimations = () => {
         ANIMATION_CLASSES.forEach(className => card.classList.remove(className));
@@ -194,8 +289,20 @@
       };
 
       const updateNavigationState = () => {
-        prevBtn.disabled = this.currentIndex === 0;
-        nextBtn.disabled = this.currentIndex === this.pages.length - 1;
+        const atStart = this.currentIndex === 0;
+        const atEnd = this.currentIndex === this.pages.length - 1;
+
+        const updateControl = (control, disabled) => {
+          if (!control) {
+            return;
+          }
+
+          control.disabled = disabled;
+          control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+        };
+
+        updateControl(prevControl, atStart);
+        updateControl(nextControl, atEnd);
       };
 
       const transitionToCard = (newIndex, direction = 'left') => {
@@ -211,8 +318,8 @@
         resetAnimations();
         card.classList.remove('flip');
 
-        const outClass = direction === 'left' ? 'slide-left-out' : 'slide-right-out';
-        const inClass = direction === 'left' ? 'slide-left-in' : 'slide-right-in';
+        const normalizedDirection = normalizeDirection(direction, 'left');
+        const { out: outClass, in: inClass } = DIRECTION_CLASS_MAP[normalizedDirection];
 
         animateCard(outClass, () => {
           this.currentIndex = newIndex;
@@ -228,15 +335,21 @@
       };
 
       const goToPrevious = () => {
-        transitionToCard(this.currentIndex - 1, 'right');
+        const direction = normalizeDirection(OPPOSITE_DIRECTION[this.slideDirection] || 'right', 'right');
+        transitionToCard(this.currentIndex - 1, direction);
       };
 
       const goToNext = () => {
-        transitionToCard(this.currentIndex + 1, 'left');
+        transitionToCard(this.currentIndex + 1, this.slideDirection);
       };
 
-      prevBtn.addEventListener('click', goToPrevious);
-      nextBtn.addEventListener('click', goToNext);
+      if (prevControl) {
+        prevControl.addEventListener('click', goToPrevious);
+      }
+
+      if (nextControl) {
+        nextControl.addEventListener('click', goToNext);
+      }
 
       card.addEventListener('click', () => {
         if (this._isTransitioning) {
@@ -247,11 +360,13 @@
       });
 
       const keydownHandler = (event) => {
-        if (event.key === 'ArrowRight') {
+        const orientation = this.slideDirection === 'up' || this.slideDirection === 'down' ? 'vertical' : 'horizontal';
+
+        if (event.key === 'ArrowRight' || (orientation === 'vertical' && event.key === 'ArrowDown')) {
           goToNext();
         }
 
-        if (event.key === 'ArrowLeft') {
+        if (event.key === 'ArrowLeft' || (orientation === 'vertical' && event.key === 'ArrowUp')) {
           goToPrevious();
         }
       };
@@ -264,8 +379,9 @@
         card,
         front,
         back,
-        prevBtn,
-        nextBtn
+        prevControl,
+        nextControl,
+        nav
       };
 
       renderCard();

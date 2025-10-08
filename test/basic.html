@@ -22,13 +22,21 @@
 
     <script src="../flashcard.js"></script>
     <script>
+      const capitals = [
+        { flag: '🇸🇪', city: 'Stockholm', country: 'Sweden' },
+        { flag: '🇯🇵', city: 'Tokyo', country: 'Japan' },
+        { flag: '🇦🇷', city: 'Buenos Aires', country: 'Argentina' },
+        { flag: '🇰🇪', city: 'Nairobi', country: 'Kenya' },
+        { flag: '🇮🇸', city: 'Reykjavík', country: 'Iceland' }
+      ];
+
       const app = new FlashcardLib.FlashcardApp();
 
-      app
-        .addPage('Welcome to the flashcard demo!', 'Click the card to flip it.')
-        .addPage('Navigate', 'Use the buttons or Arrow keys to switch cards.')
-        .addPage('Reusable', 'Add as many cards as you like.')
-        .start('flashcardApp');
+      capitals.forEach(({ flag, city, country }) => {
+        app.addPage(`${flag} ${city}`, `Country: ${country}`);
+      });
+
+      app.start('flashcardApp');
     </script>
   </body>
 </html>

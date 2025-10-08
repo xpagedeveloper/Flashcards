@@ -4,6 +4,15 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  position: relative;
+}
+
+.flashcard-container.navigation-side-arrows {
+  padding: 0 40px;
+}
+
+.flashcard-container.navigation-vertical-arrows {
+  padding: 40px 0;
 }
 
 .flashcard {
@@ -59,6 +68,22 @@
   animation: slideRightIn 0.3s forwards;
 }
 
+.slide-up-out {
+  animation: slideUpOut 0.3s forwards;
+}
+
+.slide-up-in {
+  animation: slideUpIn 0.3s forwards;
+}
+
+.slide-down-out {
+  animation: slideDownOut 0.3s forwards;
+}
+
+.slide-down-in {
+  animation: slideDownIn 0.3s forwards;
+}
+
 @keyframes slideLeftOut {
   from {
     transform: translateX(0);
@@ -107,10 +132,59 @@
   }
 }
 
+@keyframes slideUpOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideUpIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDownOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideDownIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .nav-buttons {
   display: flex;
   gap: 12px;
   justify-content: center;
+  margin-top: 16px;
 }
 
 .nav-buttons button {
@@ -131,4 +205,57 @@
 
 .nav-buttons button:not(:disabled):hover {
   background-color: #1d4ed8;
+}
+
+.flashcard-arrow {
+  position: absolute;
+  border: none;
+  background: rgba(15, 23, 42, 0.45);
+  color: #f8fafc;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.flashcard-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.flashcard-arrow:not(:disabled):hover,
+.flashcard-arrow:not(:disabled):focus {
+  background: rgba(15, 23, 42, 0.65);
+  transform: scale(1.05);
+}
+
+.arrow-horizontal {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.arrow-left {
+  left: -20px;
+}
+
+.arrow-right {
+  right: -20px;
+}
+
+.arrow-vertical {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.arrow-top {
+  top: -20px;
+}
+
+.arrow-bottom {
+  bottom: -20px;
 }
