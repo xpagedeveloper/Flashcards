@@ -15,6 +15,10 @@
   padding: 40px 0;
 }
 
+.flashcard-container.navigation-none {
+  padding: 0;
+}
+
 .flashcard {
   width: 300px;
   height: 200px;

@@ -21,10 +21,57 @@
         margin: 0;
         font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
       }
+
+      .hint {
+        margin: 0;
+        text-align: center;
+        color: #94a3b8;
+        max-width: 48ch;
+      }
+
+      .control-panel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .control-panel label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #cbd5f5;
+      }
+
+      .control-panel select {
+        background: #1e293b;
+        color: #f8fafc;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+      }
     </style>
   </head>
   <body>
     <h1>Custom Themed Cards</h1>
+    <p class="hint">
+      Adjust the controls in real time&mdash;the deck will respect your preference unless a card asks for a special layout or
+      animation.
+    </p>
+    <div class="control-panel">
+      <label for="navModePicker">
+        Navigation controls:
+        <select id="navModePicker">
+          <option value="buttons">Buttons</option>
+          <option value="side-arrows">Side arrows</option>
+          <option value="vertical-arrows">Vertical arrows</option>
+          <option value="none">Hidden</option>
+        </select>
+      </label>
+    </div>
     <div id="flashcardCustom"></div>
 
     <script src="../flashcard.js"></script>
@@ -33,17 +80,35 @@
         {
           latin: 'Vulpes vulpes',
           name: 'Red Fox',
+          navigationMode: 'buttons',
+          slideDirection: 'right',
           style: { frontColor: '#f97316', backColor: '#7c2d12', textColor: '#fff7ed' }
         },
         {
           latin: 'Delphinus delphis',
           name: 'Common Dolphin',
+          navigationMode: 'side-arrows',
+          slideDirection: 'right',
           style: { frontColor: '#0ea5e9', backColor: '#0f172a', textColor: '#e0f2fe' }
         },
         {
-          latin: 'Ursus maritimus',
-          name: 'Polar Bear',
-          style: { frontColor: '#f8fafc', backColor: '#1e293b', textColor: '#0f172a' }
+          latin: 'Strigops habroptilus',
+          name: 'Kākāpō',
+          navigationMode: 'vertical-arrows',
+          slideDirection: 'down',
+          style: { frontColor: '#bef264', backColor: '#3f6212', textColor: '#0f172a' }
+        },
+        {
+          latin: 'Ambystoma mexicanum',
+          name: 'Axolotl',
+          navigationMode: 'none',
+          slideDirection: 'left',
+          style: { frontColor: '#38bdf8', backColor: '#082f49', textColor: '#f0f9ff' }
+        },
+        {
+          latin: 'Ailuropoda melanoleuca',
+          name: 'Giant Panda',
+          style: { frontColor: '#f1f5f9', backColor: '#1e293b', textColor: '#0f172a' }
         }
       ];
 
@@ -54,15 +119,50 @@
         backColor: '#0f172a',
         textColor: '#e2e8f0',
         font: "'Fira Sans', 'Inter', sans-serif",
-        navigationMode: 'side-arrows',
+        navigationMode: 'buttons',
         slideDirection: 'right'
       });
 
-      animals.forEach(({ latin, name, style }) => {
-        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, style);
+      animals.forEach(({ latin, name, navigationMode, slideDirection, style }) => {
+        const config = { ...style };
+
+        if (navigationMode) {
+          config.navigationMode = navigationMode;
+        }
+
+        if (slideDirection) {
+          config.slideDirection = slideDirection;
+        }
+
+        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, config);
       });
 
       app.start('flashcardCustom');
+
+      const picker = document.getElementById('navModePicker');
+      const navDirectionDefaults = {
+        buttons: 'right',
+        'side-arrows': 'right',
+        'vertical-arrows': 'down'
+      };
+
+      let preferredDirection = navDirectionDefaults[picker.value] || app.slideDirection;
+
+      const applyNavigationPreference = (mode) => {
+        app.setNavigationMode(mode);
+
+        if (navDirectionDefaults[mode]) {
+          preferredDirection = navDirectionDefaults[mode];
+        }
+
+        app.setSlideDirection(preferredDirection);
+      };
+
+      picker.addEventListener('change', (event) => {
+        applyNavigationPreference(event.target.value);
+      });
+
+      applyNavigationPreference(picker.value);
     </script>
   </body>
 </html>

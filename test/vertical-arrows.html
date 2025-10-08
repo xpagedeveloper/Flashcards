@@ -38,19 +38,19 @@
     <script src="../flashcard.js"></script>
     <script>
       const snacks = [
-        { emoji: '🌮', dish: 'Taco al pastor', origin: 'Mexico City, Mexico' },
-        { emoji: '🥙', dish: 'Falafel pita', origin: 'Jerusalem, Israel' },
-        { emoji: '🥟', dish: 'Jiaozi dumplings', origin: 'Beijing, China' },
-        { emoji: '🥘', dish: 'Paella', origin: 'Valencia, Spain' }
+        { emoji: '🌮', dish: 'Taco al pastor', city: 'Mexico City', country: 'Mexico' },
+        { emoji: '🥙', dish: 'Falafel pita', city: 'Jerusalem', country: 'Israel' },
+        { emoji: '🥟', dish: 'Jiaozi dumplings', city: 'Beijing', country: 'China' },
+        { emoji: '🥘', dish: 'Paella', city: 'Valencia', country: 'Spain' }
       ];
 
       const app = new FlashcardLib.FlashcardApp({
-        navigationMode: 'vertical-arrows',
+        navigationMode: 'top-bottom',
         slideDirection: 'down'
       });
 
-      snacks.forEach(({ emoji, dish, origin }) => {
-        app.addPage(`${emoji} ${dish}`, `Where to try it: ${origin}`);
+      snacks.forEach(({ emoji, dish, city, country }) => {
+        app.addPage(`${emoji} ${dish}`, `Where to try it: ${city}, ${country}`);
       });
 
       app.start('flashcardVertical');
