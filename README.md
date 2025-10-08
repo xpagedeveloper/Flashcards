@@ -9,6 +9,8 @@ A lightweight, dependency-free JavaScript library for building animated flip-sty
 - Directional slide animations (left/right/up/down) with optional overlay arrows
 - Configurable dimensions, colours, and fonts globally or per card
 - Keyboard navigation (arrow keys) and click-to-flip interaction
+- Configurable dimensions, colours, and fonts globally or per card
+- Keyboard navigation (left/right arrow keys) and click-to-flip interaction
 - Works in modern browsers without any build tooling
 
 ## Getting started
@@ -70,23 +72,28 @@ Creates a new flashcard application instance. All properties are optional.
 | `frontColor`      | string | `"#ffffff"`                                | Background colour of the card front.                                                       |
 | `backColor`       | string | `"#ffebcd"`                                | Background colour of the card back.                                                        |
 | `textColor`       | string | `"#333333"`                                | Text colour for both faces.                                                                |
-| `navigationMode`  | string | `"buttons"`                                | Choose between `"buttons"`, `"side-arrows"`, `"vertical-arrows"`, or `"none"` for navigation controls. Aliases such as `"horizontal"`, `"horizontal-arrows"`, `"vertical"`, and `"top-bottom"` are also accepted. |
+| `navigationMode`  | string | `"buttons"`                                | Choose between `"buttons"`, `"side-arrows"`, or `"vertical-arrows"` for navigation controls. |
 | `slideDirection`  | string | `"left"`                                   | Direction for forward navigation: `"left"`, `"right"`, `"up"`, or `"down"`. Previous uses the opposite direction. |
+| Option        | Type   | Default                                 | Description                                   |
+|---------------|--------|-----------------------------------------|-----------------------------------------------|
+| `width`       | string | `"300px"`                              | Width of the flashcard.                       |
+| `height`      | string | `"200px"`                              | Height of the flashcard.                      |
+| `font`        | string | `"'Inter', 'Segoe UI', Arial, sans-serif"` | Font family applied to both card faces.       |
+| `frontColor`  | string | `"#ffffff"`                            | Background colour of the card front.          |
+| `backColor`   | string | `"#ffebcd"`                            | Background colour of the card back.           |
+| `textColor`   | string | `"#333333"`                            | Text colour for both faces.                   |
 
 #### `.addPage(frontText, backText, pageConfig?)`
 
-Adds a flashcard page. Both text arguments must be strings. The optional `pageConfig` object accepts the same styling keys as the constructor, can additionally include a `backgroundColor` property for backwards compatibility (applies to both sides), and may set `navigationMode` to temporarily override the on-screen controls for that specific card.
+Adds a flashcard page. Both text arguments must be strings. The optional `pageConfig` object accepts the same styling keys as the constructor and can additionally include a `backgroundColor` property for backwards compatibility (applies to both sides).
 
 #### Navigation modes & keyboard support
 
 - `navigationMode: "buttons"` renders the default previous/next buttons beneath the card.
-- `navigationMode: "side-arrows"` (or aliases like `"horizontal"`, `"horizontal-arrows"`, or `"left-right"`) hides the buttons and shows floating arrows on the left/right edges of the card.
-- `navigationMode: "vertical-arrows"` (or aliases like `"vertical"`, `"top-bottom"`, or `"up-down"`) hides the buttons and shows arrows above/below the card, ideal for vertical slides.
-- `navigationMode: "none"` removes on-screen navigation entirely—useful when you prefer keyboard controls or custom external buttons.
+- `navigationMode: "side-arrows"` hides the buttons and shows floating arrows on the left/right edges of the card.
+- `navigationMode: "vertical-arrows"` hides the buttons and shows arrows above/below the card, ideal for vertical slides.
 
 When `slideDirection` is set to `"up"` or `"down"`, the app listens to <kbd>ArrowUp</kbd>/<kbd>ArrowDown</kbd> in addition to the horizontal arrow keys.
-
-You can swap navigation modes on the fly by calling `setNavigationMode(...)` or by providing `navigationMode` in a page's `pageConfig`. Cards without an explicit override fall back to the most recently persisted mode.
 
 #### `.clearPages()`
 
@@ -99,10 +106,6 @@ Renders the flashcards into the specified container (either the element itself o
 #### `.destroy()`
 
 Removes global event listeners and clears cached DOM references. Call this before discarding an instance or reusing it elsewhere.
-
-#### `.setNavigationMode(mode, options?)`
-
-Updates the current navigation UI at runtime. Pass any of the supported modes (or their aliases) and the library will rebuild the controls instantly. An optional `{ persist: false }` flag keeps the change temporary—useful when alternating modes on a per-card basis. Without the flag the choice becomes the new default for subsequent cards that do not specify their own `navigationMode`.
 
 ## Live examples
 

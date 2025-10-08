@@ -21,18 +21,10 @@
         margin: 0;
         font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
       }
-
-      .hint {
-        margin: 0;
-        text-align: center;
-        color: #94a3b8;
-        max-width: 48ch;
-      }
     </style>
   </head>
   <body>
     <h1>Custom Themed Cards</h1>
-    <p class="hint">Navigation swaps between buttons and overlay arrows as you explore the wildlife deck.</p>
     <div id="flashcardCustom"></div>
 
     <script src="../flashcard.js"></script>
@@ -41,20 +33,17 @@
         {
           latin: 'Vulpes vulpes',
           name: 'Red Fox',
-          navigationMode: 'buttons',
           style: { frontColor: '#f97316', backColor: '#7c2d12', textColor: '#fff7ed' }
         },
         {
           latin: 'Delphinus delphis',
           name: 'Common Dolphin',
-          navigationMode: 'side-arrows',
           style: { frontColor: '#0ea5e9', backColor: '#0f172a', textColor: '#e0f2fe' }
         },
         {
-          latin: 'Strigops habroptilus',
-          name: 'Kākāpō',
-          navigationMode: 'buttons',
-          style: { frontColor: '#bef264', backColor: '#3f6212', textColor: '#0f172a' }
+          latin: 'Ursus maritimus',
+          name: 'Polar Bear',
+          style: { frontColor: '#f8fafc', backColor: '#1e293b', textColor: '#0f172a' }
         }
       ];
 
@@ -65,12 +54,12 @@
         backColor: '#0f172a',
         textColor: '#e2e8f0',
         font: "'Fira Sans', 'Inter', sans-serif",
-        navigationMode: 'buttons',
+        navigationMode: 'side-arrows',
         slideDirection: 'right'
       });
 
-      animals.forEach(({ latin, name, navigationMode, style }) => {
-        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, { ...style, navigationMode });
+      animals.forEach(({ latin, name, style }) => {
+        app.addPage(`Latin: ${latin}`, `Common name: ${name}`, style);
       });
 
       app.start('flashcardCustom');

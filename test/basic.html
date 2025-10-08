@@ -23,17 +23,17 @@
     <script src="../flashcard.js"></script>
     <script>
       const capitals = [
-        { city: 'Stockholm', country: 'Sweden' },
-        { city: 'Tokyo', country: 'Japan' },
-        { city: 'Buenos Aires', country: 'Argentina' },
-        { city: 'Nairobi', country: 'Kenya' },
-        { city: 'Reykjavík', country: 'Iceland' }
+        { flag: '🇸🇪', city: 'Stockholm', country: 'Sweden' },
+        { flag: '🇯🇵', city: 'Tokyo', country: 'Japan' },
+        { flag: '🇦🇷', city: 'Buenos Aires', country: 'Argentina' },
+        { flag: '🇰🇪', city: 'Nairobi', country: 'Kenya' },
+        { flag: '🇮🇸', city: 'Reykjavík', country: 'Iceland' }
       ];
 
       const app = new FlashcardLib.FlashcardApp();
 
-      capitals.forEach(({ city, country }) => {
-        app.addPage(city, `Country: ${country}`);
+      capitals.forEach(({ flag, city, country }) => {
+        app.addPage(`${flag} ${city}`, `Country: ${country}`);
       });
 
       app.start('flashcardApp');
